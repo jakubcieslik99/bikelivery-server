@@ -34,6 +34,10 @@ class EnvironmentVariables {
   @IsNotEmpty()
   @IsString()
   PG_DB: string;
+
+  @IsNotEmpty()
+  @IsString()
+  GOOGLE_DIRECTIONS_API_KEY: string;
 }
 
 export function validate(config: Record<string, unknown>) {
