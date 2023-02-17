@@ -1,4 +1,4 @@
-import { IsString, IsNumber, MinLength, Min, Max, IsDateString, IsNotEmpty } from 'class-validator';
+import { IsString, MinLength, IsDateString, IsNotEmpty, IsCurrency, Matches } from 'class-validator';
 
 export class CreateTripDto {
   @IsNotEmpty({ message: 'Start address is required.' })
@@ -10,9 +10,8 @@ export class CreateTripDto {
   @MinLength(3, { message: 'Destination address is too short.' })
   destination_address: string;
   @IsNotEmpty({ message: 'Price is required.' })
-  @IsNumber({}, { message: 'Price is not a number.' })
-  @Min(1, { message: 'Price is too low.' })
-  @Max(9999, { message: 'Price is too high.' })
+  @IsCurrency({}, { message: 'Invalid price format.' })
+  @Matches(/^(\d{1,4}\.\d{2})?$/, { message: 'Price must be greater than 0.00 and less than 10000.00.' })
   price: number;
   @IsNotEmpty({ message: 'Date is required.' })
   @IsDateString({}, { message: 'Invalid date format.' })
