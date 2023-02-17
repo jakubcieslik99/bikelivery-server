@@ -8,7 +8,7 @@ export class Trip {
   start_address: string;
   @Column({ type: 'varchar' })
   destination_address: string;
-  @Column({ type: 'integer' })
+  @Column({ type: 'float' })
   price: number;
   @Column({ type: 'float' })
   distance: number;
