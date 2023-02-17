@@ -15,10 +15,16 @@ export class TripsService {
   ) {}
 
   //GET /trips
-  async getTrips(): Promise<{ trips: Trip[] }> {
-    const trips = await this.tripRepository.find();
+  async getTrips(): Promise<any[]> {
+    const trips = await this.tripRepository
+      .createQueryBuilder('trip')
+      .select('trip.id, trip.start_address, trip.destination_address')
+      .addSelect("to_char(trip.date, 'YYYY-MM-DD')", 'date')
+      .addSelect("ROUND(trip.distance::numeric/1000, 2) || 'km'", 'distance')
+      .addSelect("ROUND(trip.price::numeric, 2) || 'PLN'", 'price')
+      .getRawMany();
 
-    return { trips };
+    return trips;
   }
 
   //POST /trips
@@ -34,6 +40,12 @@ export class TripsService {
       distance: directions.distance.value,
     };
     const trip = await this.tripRepository.save(newTrip);
+
+    /*const returnedTrip = {
+      ...trip,
+      price: `${trip.price}PLN`,
+      distance: `${(trip.distance / 1000).toString()}km`,
+    };*/
 
     return { message: 'Trip added successfully.', trip };
   }
@@ -61,6 +73,12 @@ export class TripsService {
       distance: directions?.distance.value || existingTrip.distance,
     };
     const trip = await this.tripRepository.save(updatedTrip);
+
+    /*const returnedTrip = {
+      ...trip,
+      price: `${trip.price}PLN`,
+      distance: `${(trip.distance / 1000).toString()}km`,
+    };*/
 
     return { message: 'Trip updated successfully.', trip };
   }
