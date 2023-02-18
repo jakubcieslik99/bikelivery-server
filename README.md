@@ -5,7 +5,7 @@
 📌 A simple REST API server used for managing bike deliveries & showing monthly/weekly stats. Project contains NestJS app as
 a backend (server). Database used in this project is PostgreSQL.
 
-![GitHub package.json version (subfolder of monorepo)](https://img.shields.io/github/package-json/v/jakubcieslik99/bikelivery-server?color=orange&filename=server%2Fpackage.json&label=server%20version)
+![GitHub package.json version (subfolder of monorepo)](https://img.shields.io/github/package-json/v/jakubcieslik99/bikelivery-server?color=orange&filename=package.json&label=server%20version)
 ![GitHub top language](https://img.shields.io/github/languages/top/jakubcieslik99/bikelivery-server)
 ![GitHub repo size](https://img.shields.io/github/repo-size/jakubcieslik99/bikelivery-server)
 [![API)](https://img.shields.io/website?label=demo%20website&url=https%3A%2F%2Fapi.bikelivery-server.jakubcieslik.com%2F)](https://api.bikelivery-server.jakubcieslik.com/)
