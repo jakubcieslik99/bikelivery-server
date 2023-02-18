@@ -1,73 +1,102 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# <img src="https://i.ibb.co/F43sFj3/bikelivery-server-1.png" width="440">
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Bikelivery Server 🚴
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+📌 A simple REST API server used for managing bike deliveries & showing monthly/weekly stats. Project contains NestJS app as
+a backend (server). Database used in this project is PostgreSQL.
 
-## Description
+![GitHub package.json version (subfolder of monorepo)](https://img.shields.io/github/package-json/v/jakubcieslik99/bikelivery-server?color=orange&filename=server%2Fpackage.json&label=server%20version)
+![GitHub top language](https://img.shields.io/github/languages/top/jakubcieslik99/bikelivery-server)
+![GitHub repo size](https://img.shields.io/github/repo-size/jakubcieslik99/bikelivery-server)
+[![API)](https://img.shields.io/website?label=demo%20website&url=https%3A%2F%2Fapi.bikelivery-server.jakubcieslik.com%2F)](https://api.bikelivery-server.jakubcieslik.com/)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Installation
+- Adding trips between two addresses with price and date
+- Editing or deleting previously added trips
+- Listing all added trips
+- Listing weekly stats containing total distance and price from current week
+- Listing monthly stats containing total distance, average distance and average price from current month splitted by days
 
-```bash
-$ npm install
-```
+## Endpoints Documentation
 
-## Running the app
+📚 Documentation of all available endpoints can be found here:
+[API Documentation](https://documenter.getpostman.com/view/20607862/2s93CHtut2)
+
+## Run Locally
+
+- Clone repository
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+  git clone https://github.com/jakubcieslik99/bikelivery-server.git
 ```
 
-## Test
+ℹ️ Instructions for running server app locally:
+
+- Navigate to the server directory and install dependencies
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+  cd bikelivery-server
+  npm install
 ```
 
-## Support
+- Run server app in development mode
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+  npm run start:dev
+```
 
-## Stay in touch
+## Deployment
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+ℹ️ Instructions for building and running server app in production
 
-## License
+- Transpile to production build
 
-Nest is [MIT licensed](LICENSE).
+```bash
+  npm run build
+```
+
+- Run server app in production mode
+
+```bash
+  npm install --omit=dev
+  npm run start:prod
+```
+
+## Environment Variables
+
+⚙️ To run server app, you will need to add the following environment variables to your .env file
+
+- `ENV`
+
+- `PORT`
+
+- `IP`
+
+- `API_URL`
+
+- `WEBAPP_URL`
+
+- `PG_HOST`
+
+- `PG_PORT`
+
+- `PG_USER`
+
+- `PG_PASSWORD`
+
+- `PG_DB`
+
+- `GOOGLE_DIRECTIONS_API_KEY`
+
+## Languages
+
+🔤 Available API messages languages: **EN**
+
+## Feedback
+
+If you have any feedback, please reach out to me at ✉️ contact@jakubcieslik.com
+
+## Authors
+
+- [@jakubcieslik99](https://www.github.com/jakubcieslik99)
