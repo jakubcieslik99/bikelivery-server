@@ -37,6 +37,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
         httpMessage = exception.response.message;
       //unknown http validations
       else httpMessage = 'Bad request.';
+    } else if (httpStatus === 429) {
+      //throttler exception
+      httpMessage = 'Too many requests.';
     } else if (httpStatus < 500) {
       httpMessage = exception?.response?.message || exception?.message || httpMessage;
     } else httpMessage = 'Internal server error.';
