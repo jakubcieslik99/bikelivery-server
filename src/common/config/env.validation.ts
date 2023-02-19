@@ -15,9 +15,6 @@ class EnvironmentVariables {
   @IsNotEmpty()
   @IsString()
   API_URL: string;
-  @IsNotEmpty()
-  @IsString()
-  WEBAPP_URL: string;
 
   @IsNotEmpty()
   @IsString()
