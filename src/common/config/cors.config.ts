@@ -7,7 +7,7 @@ const configService = new ConfigService();
 
 const allowedOrigins = [configService.get<string>('API_URL')];
 
-const corsOptions: CorsOptions = {
+export const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) callback(null, true);
     else callback(new Error('Not allowed by CORS'));
@@ -17,5 +17,3 @@ const corsOptions: CorsOptions = {
   credentials: true,
   maxAge: 3600,
 };
-
-export default corsOptions;

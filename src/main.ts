@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { urlencoded, json } from 'express';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import corsOptions from './common/config/cors.config';
+import { corsOptions } from './common/config/cors.config';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/errors/all-exceptions.filter';
 

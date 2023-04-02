@@ -41,12 +41,6 @@ export class TripsService {
     };
     const trip = await this.tripRepository.save(newTrip);
 
-    /*const returnedTrip = {
-      ...trip,
-      price: `${trip.price}PLN`,
-      distance: `${(trip.distance / 1000).toString()}km`,
-    };*/
-
     return { message: 'Trip added successfully.', trip };
   }
 
@@ -57,7 +51,7 @@ export class TripsService {
 
     let directions: RouteLeg | null = null;
     if (
-      updateTripDto.start_address !== existingTrip.start_address &&
+      updateTripDto.start_address !== existingTrip.start_address ||
       updateTripDto.destination_address !== existingTrip.destination_address
     ) {
       directions = await this.googleMapsService.getDirections(
@@ -73,12 +67,6 @@ export class TripsService {
       distance: directions?.distance.value || existingTrip.distance,
     };
     const trip = await this.tripRepository.save(updatedTrip);
-
-    /*const returnedTrip = {
-      ...trip,
-      price: `${trip.price}PLN`,
-      distance: `${(trip.distance / 1000).toString()}km`,
-    };*/
 
     return { message: 'Trip updated successfully.', trip };
   }
