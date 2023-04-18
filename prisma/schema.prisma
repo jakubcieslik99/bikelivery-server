@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @default(uuid()) @id
+  email         String         @unique
+  password      String
+  verified      Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  trips         Trip[]
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model Trip {
+  id                  String   @default(uuid()) @id
+  start_address       String
+  destination_address String
+  distance            Float    @db.DoublePrecision
+  price               Float    @db.DoublePrecision
+  date                DateTime
+  user_id             String
+  user                User     @relation(fields: [user_id], references: [id])
+
+  @@map("trips")
+}
+
+model RefreshToken {
+  id             String   @default(uuid()) @id
+  token          String   @unique
+  expirationDate BigInt
+  user_id        String
+  user           User     @relation(fields: [user_id], references: [id])
+
+  @@map("refresh_tokens")
+}
