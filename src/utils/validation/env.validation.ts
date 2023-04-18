@@ -18,19 +18,14 @@ class EnvironmentVariables {
 
   @IsNotEmpty()
   @IsString()
-  PG_HOST: string;
-  @IsNotEmpty()
-  @IsNumber()
-  PG_PORT: number;
+  DATABASE_URL: string;
+
   @IsNotEmpty()
   @IsString()
-  PG_USER: string;
+  JWT_ACCESS_TOKEN_SECRET: string;
   @IsNotEmpty()
   @IsString()
-  PG_PASSWORD: string;
-  @IsNotEmpty()
-  @IsString()
-  PG_DB: string;
+  JWT_REFRESH_TOKEN_SECRET: string;
 
   @IsNotEmpty()
   @IsString()

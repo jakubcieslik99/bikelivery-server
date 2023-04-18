@@ -4,9 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import { urlencoded, json } from 'express';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import { corsOptions } from './common/config/cors.config';
+import { corsOptions } from './utils/config/cors.config';
 import { AppModule } from './app.module';
-import { AllExceptionsFilter } from './common/errors/all-exceptions.filter';
+import { AllExceptionsFilter } from './utils/errors/all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
