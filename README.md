@@ -74,17 +74,11 @@ a backend (server). Database used in this project is PostgreSQL.
 
 - `API_URL`
 
-- `WEBAPP_URL`
+- `DATABASE_URL`
 
-- `PG_HOST`
+- `JWT_ACCESS_TOKEN_SECRET`
 
-- `PG_PORT`
-
-- `PG_USER`
-
-- `PG_PASSWORD`
-
-- `PG_DB`
+- `JWT_REFRESH_TOKEN_SECRET`
 
 - `GOOGLE_DIRECTIONS_API_KEY`
 
