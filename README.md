@@ -1,8 +1,8 @@
 # <img src="https://i.ibb.co/F43sFj3/bikelivery-server-1.png" width="440">
 
-## Bikelivery Server 🚴
+## Bikelivery Server 🚴 _(currently being refactored)_
 
-📌 A simple REST API server used for managing bike deliveries & showing monthly/weekly stats. Project contains NestJS app as
+🔃 A simple REST API server used for managing bike deliveries & showing monthly/weekly stats. Project contains NestJS app as
 a backend (server). Database used in this project is PostgreSQL.
 
 ![GitHub package.json version (subfolder of monorepo)](https://img.shields.io/github/package-json/v/jakubcieslik99/bikelivery-server?color=orange&filename=package.json&label=server%20version)
