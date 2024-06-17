@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Trip } from './entities/trip.entity';
 import { TripsController } from './trips.controller';
 import { TripsService } from './trips.service';
-import { GoogleMapsModule } from '../google-maps/google-maps.module';
-import { JWTAuthStrategy } from 'src/auth/jwt-auth.strategy';
+import { GoogleMapsService } from '../google-maps/google-maps.service';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Trip])],
   controllers: [TripsController],
-  providers: [TripsService, JWTAuthStrategy],
-  imports: [GoogleMapsModule],
+  providers: [TripsService, GoogleMapsService],
 })
 export class TripsModule {}

@@ -1,8 +1,8 @@
 # <img src="https://i.ibb.co/F43sFj3/bikelivery-server-1.png" width="440">
 
-## Bikelivery Server 🚴 _(currently being refactored)_
+## Bikelivery Server 🚴
 
-🔃 A simple REST API server used for managing bike deliveries & showing monthly/weekly stats. Project contains NestJS app as
+📌 A simple REST API server used for managing bike deliveries & showing monthly/weekly stats. Project contains NestJS app as
 a backend (server). Database used in this project is PostgreSQL.
 
 ![GitHub package.json version (subfolder of monorepo)](https://img.shields.io/github/package-json/v/jakubcieslik99/bikelivery-server?color=orange&filename=package.json&label=server%20version)
@@ -42,7 +42,8 @@ a backend (server). Database used in this project is PostgreSQL.
 - Run server app in development mode
 
 ```bash
-  npm run start:dev
+  npm run docker
+  npm run dev
 ```
 
 ## Deployment
@@ -59,6 +60,7 @@ a backend (server). Database used in this project is PostgreSQL.
 
 ```bash
   npm install --omit=dev
+  npm run migration:run
   npm run start:prod
 ```
 
@@ -66,15 +68,37 @@ a backend (server). Database used in this project is PostgreSQL.
 
 ⚙️ To run server app, you will need to add the following environment variables to your .env file
 
+- `DIR`
+
 - `ENV`
+
+- `POSTGRES_VER`
+
+- `REDIS_VER`
 
 - `PORT`
 
-- `IP`
-
 - `API_URL`
 
-- `DATABASE_URL`
+- `APP_URL`
+
+- `POSTGRES_HOST`
+
+- `POSTGRES_PORT`
+
+- `POSTGRES_DB`
+
+- `POSTGRES_USER`
+
+- `POSTGRES_PASSWORD`
+
+- `REDIS_HOST`
+
+- `REDIS_PORT`
+
+- `REDIS_PASSWORD`
+
+- `COOKIE_SESSION_SECRET`
 
 - `JWT_ACCESS_TOKEN_SECRET`
 

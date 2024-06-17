@@ -1,0 +1,39 @@
+services:
+  postgres:
+    container_name: ${DIR}_postgres_test
+    image: postgres:${POSTGRES_VER}
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - ${POSTGRES_PORT}:5432
+    expose:
+      - ${POSTGRES_PORT}
+    networks:
+      - internalnet
+
+  redis:
+    container_name: ${DIR}_redis_test
+    image: bitnami/redis:${REDIS_VER}
+    volumes:
+      - redis_dev_data:/data
+    environment:
+      ALLOW_EMPTY_PASSWORD: no
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    ports:
+      - ${REDIS_PORT}:6379
+    expose:
+      - ${REDIS_PORT}
+    networks:
+      - internalnet
+
+volumes:
+  postgres_test_data: {}
+  redis_test_data: {}
+
+networks:
+  internalnet:
+    driver: bridge

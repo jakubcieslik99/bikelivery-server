@@ -1,34 +1,74 @@
-import { Request, Response } from 'express';
-import { Controller, HttpCode, Req, Res } from '@nestjs/common';
-import { Body, Get, Post } from '@nestjs/common/decorators';
-import { AuthDto } from './dto/auth.dto';
+import { Controller, HttpCode, UseGuards, Get, Post, Body, Session } from '@nestjs/common';
+import { RegisterDto, RegisterResDto } from './dtos/register.dto';
 import { AuthService } from './auth.service';
+import { UsersService } from '../users/users.service';
+import { Serialize } from '../common/decorators/serialize.decorator';
+import { LoginDto, LoginResDto } from './dtos/login.dto';
+import { RefreshAccessTokenGuard } from '../common/guards/refresh-access-token.guard';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { UserInfoDto } from '../users/dtos/user.dto';
 
-@Controller('/api/auth')
+@Controller('/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private usersService: UsersService,
+  ) {}
 
   @Post('/register')
   @HttpCode(201)
-  async register(@Req() req: Request, @Body() registerDto: AuthDto) {
-    return await this.authService.register(req, registerDto);
+  @Serialize(RegisterResDto)
+  async register(@Body() body: RegisterDto, @Session() session: Record<string, unknown>) {
+    const user = await this.authService.register(body);
+
+    const userInfo = this.usersService.prepareUserInfo(user);
+
+    const accessToken = await this.authService.generateAccessToken(userInfo);
+    const refreshToken = await this.authService.generateRefreshToken(user.id);
+
+    await this.authService.cacheUserInfo(userInfo);
+    this.authService.setSession(session, refreshToken);
+
+    return {
+      message: ['Registered successfully.'],
+      userInfo,
+      accessToken,
+    };
   }
 
   @Post('/login')
   @HttpCode(200)
-  async login(@Req() req: Request, @Res() res: Response, @Body() loginDto: AuthDto) {
-    return await this.authService.login(req, res, loginDto);
+  @Serialize(LoginResDto)
+  async login(@Body() body: LoginDto, @Session() session: Record<string, unknown>) {
+    const user = await this.authService.login(body);
+
+    const userInfo = this.usersService.prepareUserInfo(user);
+
+    const accessToken = await this.authService.generateAccessToken(userInfo);
+    const refreshToken = await this.authService.generateRefreshToken(user.id);
+
+    await this.authService.cacheUserInfo(userInfo);
+    this.authService.setSession(session, refreshToken);
+
+    return {
+      message: ['Logged in successfully.'],
+      userInfo,
+      accessToken,
+    };
   }
 
   @Get('/refreshAccessToken')
   @HttpCode(201)
-  async refreshAccessToken(@Req() req: Request, @Res() res: Response) {
-    return await this.authService.refreshAccessToken(req, res);
+  @UseGuards(RefreshAccessTokenGuard)
+  async refreshAccessToken(@CurrentUser() userInfo: UserInfoDto) {
+    const accessToken = await this.authService.generateAccessToken(userInfo);
+
+    return { accessToken };
   }
 
   @Get('/logout')
   @HttpCode(204)
-  async logout(@Req() req: Request, @Res() res: Response) {
-    return await this.authService.logout(req, res);
+  async logout(@Session() session: Record<string, unknown>) {
+    return this.authService.clearSession(session);
   }
 }

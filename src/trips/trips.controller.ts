@@ -1,45 +1,69 @@
-import { Controller, UseGuards, HttpCode, ParseUUIDPipe } from '@nestjs/common';
-import { Body, Param, Get, Post, Put, Delete } from '@nestjs/common/decorators';
-import { CreateTripDto } from './dto/create-trip.dto';
-import { UpdateTripDto } from './dto/update-trip.dto';
+import { Controller, UseGuards, HttpCode, UseInterceptors } from '@nestjs/common';
+import { Get, Post, Put, Delete, Body, Param } from '@nestjs/common/decorators';
+import { AuthGuard } from '../common/guards/auth.guard';
 import { TripsService } from './trips.service';
-import { JWTAuthGuard } from 'src/auth/jwt-auth.guard';
-import { GetUserInfo } from 'src/utils/decorators/user-info.decorator';
-import UserInfo from 'src/utils/interfaces/user-info.interface';
+import { GoogleMapsService } from '../google-maps/google-maps.service';
+import { Serialize } from '../common/decorators/serialize.decorator';
+import { TripDto } from './dtos/trip.dto';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import { CreateTripDto, CreateTripResDto } from './dtos/create-trip.dto';
+import { UpdateTripDto, UpdateTripResDto } from './dtos/update-trip.dto';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { UserInfoDto } from '../users/dtos/user.dto';
 
-@Controller('/api/trips')
+@Controller('/trips')
+@UseGuards(AuthGuard)
 export class TripsController {
-  constructor(private readonly tripsService: TripsService) {}
+  constructor(
+    private readonly tripsService: TripsService,
+    private readonly googleMapsService: GoogleMapsService,
+  ) {}
 
-  @UseGuards(JWTAuthGuard)
   @Get()
   @HttpCode(200)
-  async getTrips(@GetUserInfo() userInfo: UserInfo) {
-    return await this.tripsService.getTrips(userInfo);
+  @CacheTTL(1)
+  @Serialize(TripDto)
+  @UseInterceptors(CacheInterceptor)
+  async getTrips(@CurrentUser() userInfo: UserInfoDto) {
+    return await this.tripsService.getTrips(userInfo.id);
   }
 
-  @UseGuards(JWTAuthGuard)
   @Post()
   @HttpCode(201)
-  async createTrip(@GetUserInfo() userInfo: UserInfo, @Body() createTripDto: CreateTripDto) {
-    return await this.tripsService.createTrip(userInfo, createTripDto);
+  @Serialize(CreateTripResDto)
+  async createTrip(@Body() createTripDto: CreateTripDto, @CurrentUser() userInfo: UserInfoDto) {
+    const { distance } = await this.googleMapsService.getDirections(
+      createTripDto.start_address,
+      createTripDto.destination_address,
+    );
+
+    const trip = await this.tripsService.createTrip(createTripDto, userInfo.id, distance.value);
+    return {
+      message: ['Trip added successfully.'],
+      trip,
+    };
   }
 
-  @UseGuards(JWTAuthGuard)
   @Put('/:id')
   @HttpCode(200)
-  async updateTrip(
-    @GetUserInfo() userInfo: UserInfo,
-    @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updateTripDto: UpdateTripDto,
-  ) {
-    return await this.tripsService.updateTrip(userInfo, id, updateTripDto);
+  @Serialize(UpdateTripResDto)
+  async updateTrip(@Param('id') id: string, @Body() updateTripDto: UpdateTripDto, @CurrentUser() userInfo: UserInfoDto) {
+    const { distance } = await this.googleMapsService.getDirections(
+      updateTripDto.start_address,
+      updateTripDto.destination_address,
+    );
+
+    const trip = await this.tripsService.updateTrip(+id, updateTripDto, userInfo.id, distance.value);
+    return {
+      message: ['Trip updated successfully.'],
+      trip,
+    };
   }
 
-  @UseGuards(JWTAuthGuard)
   @Delete('/:id')
   @HttpCode(200)
-  async deleteTrip(@GetUserInfo() userInfo: UserInfo, @Param('id', new ParseUUIDPipe()) id: string) {
-    return await this.tripsService.deleteTrip(userInfo, id);
+  async deleteTrip(@Param('id') id: string, @CurrentUser() userInfo: UserInfoDto) {
+    await this.tripsService.deleteTrip(+id, userInfo.id);
+    return { message: ['Trip deleted successfully.'] };
   }
 }

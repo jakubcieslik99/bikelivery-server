@@ -1,144 +1,86 @@
-import { Request, Response } from 'express';
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-  UnauthorizedException,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../users/entities/user.entity';
+import { InjectRedis } from '@nestjs-modules/ioredis';
+import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto } from './dto/auth.dto';
-
-const configService = new ConfigService();
+import { ConfigService } from '@nestjs/config';
+import { RegisterDto } from './dtos/register.dto';
+import { LoginDto } from './dtos/login.dto';
+import bcrypt from 'bcrypt';
+import { UserInfoDto } from '../users/dtos/user.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly db: PrismaService, private readonly jwt: JwtService) {}
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+    @InjectRedis('sessions')
+    private readonly redis: Redis,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
-  //POST /auth/register
-  async register(req: Request, registerDto: AuthDto) {
-    if (req.cookies?.refreshToken) throw new ConflictException('Someone is already logged in.');
+  async register(data: RegisterDto) {
+    const existingUser = await this.usersRepository.findOneBy({ email: data.email });
+    if (existingUser) throw new ConflictException('User with this email already exists.');
 
-    const conflictUserEmail = await this.db.user.findUnique({ where: { email: registerDto.email } });
-    if (conflictUserEmail) throw new ConflictException('User with this email already exists.');
+    const hashedPassword = await this.hashPassword(data.password);
 
-    const hashedPassword = await this.hashPassword(registerDto.password);
+    const user = this.usersRepository.create({ ...data, password: hashedPassword });
+    await this.usersRepository.save(user);
 
-    const createUser = {
-      email: registerDto.email,
-      password: hashedPassword,
-    };
-    await this.db.user.create({ data: createUser });
-
-    return { message: 'Registration successful. Now you can log in.' };
+    return user;
   }
-  //POST /auth/login
-  async login(req: Request, res: Response, loginDto: AuthDto) {
-    if (req.cookies?.refreshToken) await this.clearCookie(req.cookies.refreshToken, res);
 
-    const loggedUser = await this.db.user.findUnique({ where: { email: loginDto.email.toLowerCase() } });
-    if (!loggedUser) throw new NotFoundException('User with this email does not exist.');
+  async login(data: LoginDto) {
+    const user = await this.usersRepository.findOneBy({ email: data.email });
+    if (!user) throw new NotFoundException('Wrong password or user not found.');
 
-    if (!loggedUser.verified) throw new UnauthorizedException('User is not verified.');
+    const rightPassword = await bcrypt.compare(data.password, user.password);
+    if (!rightPassword) throw new NotFoundException('Wrong password or user not found.');
 
-    const checkPassword = await this.checkPassword(loginDto.password, loggedUser.password);
-    if (!checkPassword) throw new UnauthorizedException('Invalid email or password.');
-
-    const accessToken = await this.getToken({ id: loggedUser.id, email: loggedUser.email }, 'access');
-    const refreshToken = await this.getToken({ id: loggedUser.id, email: loggedUser.email }, 'refresh');
-
-    await this.db.refreshToken.create({
-      data: { token: refreshToken, expirationDate: Date.now() + 90 * 24 * 3600 * 1000, user_id: loggedUser.id },
-    });
-
-    return res
-      .cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-        sameSite: 'none',
-        secure: configService.get<string>('ENV') !== 'test' ? true : false,
-        maxAge: 90 * 24 * 3600 * 1000, //90 days
-      })
-      .send({
-        userInfo: {
-          id: loggedUser.id,
-          email: loggedUser.email,
-        },
-        accessToken: accessToken,
-      });
-  }
-  //GET /auth/refreshAccessToken
-  async refreshAccessToken(req: Request, res: Response) {
-    if (!req.cookies?.refreshToken) throw new UnauthorizedException('Unauthorized access.');
-
-    const checkedToken = await this.db.refreshToken.findUnique({ where: { token: req.cookies.refreshToken } });
-    if (!checkedToken) throw new UnauthorizedException('Unauthorized access.');
-
-    const userInfo = await this.jwt.verifyAsync(req.cookies.refreshToken, {
-      secret: configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
-    });
-    if (!userInfo) throw new UnauthorizedException('Unauthorized access.');
-
-    const accessToken = await this.getToken({ id: userInfo.id, email: userInfo.email }, 'access');
-
-    return res.send({ accessToken });
-  }
-  //GET /auth/logout
-  async logout(req: Request, res: Response) {
-    if (!req.cookies?.refreshToken) return res.end();
-
-    const checkedToken = await this.db.refreshToken.findUnique({ where: { token: req.cookies.refreshToken } });
-
-    if (checkedToken) await this.db.refreshToken.delete({ where: { token: req.cookies.refreshToken } });
-
-    return res
-      .clearCookie('refreshToken', {
-        httpOnly: true,
-        sameSite: 'none',
-        secure: configService.get<string>('ENV') !== 'test' ? true : false,
-      })
-      .end();
+    return user;
   }
 
   async hashPassword(password: string) {
-    return await bcrypt.hash(password, 10);
+    return bcrypt.hash(password, 10);
   }
 
-  async checkPassword(password: string, hash: string) {
-    return await bcrypt.compare(password, hash);
-  }
-
-  async clearCookie(refreshTokenCookie: string, res: Response) {
-    const checkedToken = await this.db.refreshToken.findUnique({ where: { token: refreshTokenCookie } });
-
-    if (checkedToken) await this.db.refreshToken.delete({ where: { token: refreshTokenCookie } });
-
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      sameSite: 'none',
-      secure: configService.get<string>('ENV') !== 'test' ? true : false,
+  async generateAccessToken(userInfo: UserInfoDto) {
+    return this.jwtService.signAsync(userInfo, {
+      secret: this.configService.get('jwt.accessToken.secret'),
+      expiresIn: this.configService.get('jwt.accessToken.expiresIn'),
     });
-    throw new ConflictException('Someone is already logged in. Log out or try again.');
   }
 
-  async getToken(userInfo: { id: string; email: string }, type: 'access' | 'refresh') {
-    if (type === 'access') {
-      const accessToken = await this.jwt.signAsync(userInfo, {
-        secret: configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
-        expiresIn: '20m',
-      });
-      if (!accessToken) throw new InternalServerErrorException('Internal server error.');
-      return accessToken;
-    }
-    if (type === 'refresh') {
-      const refreshToken = await this.jwt.signAsync(userInfo, {
-        secret: configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
-        expiresIn: '90d',
-      });
-      if (!refreshToken) throw new InternalServerErrorException('Internal server error.');
-      return refreshToken;
+  async generateRefreshToken(userId: number) {
+    return this.jwtService.signAsync(
+      { userId },
+      {
+        secret: this.configService.get('jwt.refreshToken.secret'),
+        expiresIn: this.configService.get('jwt.refreshToken.expiresIn'),
+      },
+    );
+  }
+
+  async cacheUserInfo(userInfo: UserInfoDto) {
+    return this.redis.set(
+      userInfo.id.toString(),
+      JSON.stringify(userInfo),
+      'EX',
+      this.configService.get('jwt.refreshToken.expiresIn'),
+    );
+  }
+
+  setSession(session: Record<string, unknown>, refreshToken: string) {
+    session.refreshToken = refreshToken;
+  }
+
+  clearSession(session: Record<string, unknown>) {
+    if (session?.refreshToken) {
+      session.refreshToken = undefined;
     }
   }
 }
