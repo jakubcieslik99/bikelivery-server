@@ -68,42 +68,29 @@ a backend (server). Database used in this project is PostgreSQL.
 
 ⚙️ To run server app, you will need to add the following environment variables to your .env file
 
-- `DIR`
-
-- `ENV`
+- `DIR` _(default already set for development)_
+- `ENV` _(default already set for development)_
 
 - `POSTGRES_VER`
-
 - `REDIS_VER`
 
 - `PORT`
-
 - `API_URL`
-
 - `APP_URL`
 
 - `POSTGRES_HOST`
-
 - `POSTGRES_PORT`
-
 - `POSTGRES_DB`
-
 - `POSTGRES_USER`
-
 - `POSTGRES_PASSWORD`
 
 - `REDIS_HOST`
-
 - `REDIS_PORT`
-
 - `REDIS_PASSWORD`
 
 - `COOKIE_SESSION_SECRET`
-
 - `JWT_ACCESS_TOKEN_SECRET`
-
 - `JWT_REFRESH_TOKEN_SECRET`
-
 - `GOOGLE_DIRECTIONS_API_KEY`
 
 ## Languages
