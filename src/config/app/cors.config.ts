@@ -20,4 +20,5 @@ export default (config: ConfigService<unknown, boolean>) =>
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
+    maxAge: 900,
   }) as CorsOptions;

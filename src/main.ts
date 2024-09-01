@@ -13,6 +13,9 @@ async function bootstrap() {
 
   const config = app.get(ConfigService);
 
+  const host = config.get('app.host') === 'localhost' ? '127.0.0.1' : config.get('app.host');
+  app.getHttpAdapter().getInstance().set('trust proxy', `loopback, ${host}`);
+
   app.use(helmet());
   app.enableCors(cors(config));
 
