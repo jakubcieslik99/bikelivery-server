@@ -1,9 +1,14 @@
-# Node.js local integration testing docker-compose file
+# Node.js local development docker-compose file
 services:
   # https://hub.docker.com/r/bitnami/postgresql
   postgres:
-    container_name: ${DIR}_postgres_test
+    container_name: ${DIR}_postgres_dev
     image: bitnami/postgresql:${POSTGRES_VER}.0
+    volumes:
+      - postgres_dev_data:/bitnami/postgresql
+    tmpfs:
+      - /docker-entrypoint-initdb.d
+      - /docker-entrypoint-preinitdb.d
     env_file:
       - .env
     environment:
@@ -17,8 +22,10 @@ services:
       - ${POSTGRES_PORT}
   # https://hub.docker.com/r/bitnami/redis
   redis:
-    container_name: ${DIR}_redis_test
+    container_name: ${DIR}_redis_dev
     image: bitnami/redis:${REDIS_VER}
+    volumes:
+      - redis_dev_data:/bitnami/redis/data
     env_file:
       - .env
     environment:
@@ -28,3 +35,6 @@ services:
       - ${REDIS_PORT}:6379
     expose:
       - ${REDIS_PORT}
+volumes:
+  postgres_dev_data: {}
+  redis_dev_data: {}
