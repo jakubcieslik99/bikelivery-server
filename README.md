@@ -36,14 +36,14 @@ a backend (server). Database used in this project is PostgreSQL.
 
 ```bash
   cd bikelivery-server
-  npm install
+  pnpm install
 ```
 
 - Run server app in development mode
 
 ```bash
-  npm run docker
-  npm run dev
+  pnpm run docker
+  pnpm run dev
 ```
 
 ## Deployment
@@ -53,15 +53,15 @@ a backend (server). Database used in this project is PostgreSQL.
 - Transpile to production build
 
 ```bash
-  npm run build
+  pnpm run build
 ```
 
 - Run server app in production mode
 
 ```bash
-  npm install --omit=dev
-  npm run migration:run
-  npm run start:prod
+  pnpm install --prod
+  pnpm run migration:run
+  pnpm run start
 ```
 
 ## Environment Variables
