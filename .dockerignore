@@ -3,9 +3,11 @@ dist/
 build/
 coverage/
 Dockerfile
-docker-compose.yml
+docker-compose.dev.yml
 docker-compose.test.integration.yml
+docker-compose.yml
 .dockerignore
 .gitignore
 .git
+.github
 .DS_Store
