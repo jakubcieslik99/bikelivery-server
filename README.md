@@ -68,6 +68,8 @@ a backend (server). Database used in this project is PostgreSQL.
 
 ⚙️ To run server app, you will need to add the following environment variables to your .env file
 
+Vars:
+
 - `DIR` _(default already set for development)_
 - `ENV` _(default already set for development)_
 
@@ -82,12 +84,14 @@ a backend (server). Database used in this project is PostgreSQL.
 - `POSTGRES_PORT`
 - `POSTGRES_DB`
 - `POSTGRES_USER`
-- `POSTGRES_PASSWORD`
 
 - `REDIS_HOST`
 - `REDIS_PORT`
-- `REDIS_PASSWORD`
 
+Secrets:
+
+- `POSTGRES_PASSWORD`
+- `REDIS_PASSWORD`
 - `COOKIE_SESSION_SECRET`
 - `JWT_ACCESS_TOKEN_SECRET`
 - `JWT_REFRESH_TOKEN_SECRET`
