@@ -5,9 +5,6 @@ import { UserInfoDto } from './dtos/user.dto';
 @Injectable()
 export class UsersService {
   prepareUserInfo(user: User) {
-    return {
-      id: user.id,
-      email: user.email,
-    } as UserInfoDto;
+    return { id: user.id, email: user.email } as UserInfoDto;
   }
 }

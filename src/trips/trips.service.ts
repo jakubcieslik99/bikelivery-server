@@ -14,7 +14,7 @@ export class TripsService {
 
   async getTrips(userId: number) {
     return this.tripsRepository.find({ where: { user: { id: userId } }, order: { date: 'DESC' } });
-    //return this.tripsRepository.find({ where: { user: { id: userId } }, order: { date: 'DESC' }, relations: ['user'] });
+    // return this.tripsRepository.find({ where: { user: { id: userId } }, order: { date: 'DESC' }, relations: ['user'] });
   }
 
   async createTrip(trip: CreateTripDto, userId: number, distance: number) {

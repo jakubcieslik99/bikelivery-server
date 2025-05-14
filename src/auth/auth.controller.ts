@@ -29,11 +29,7 @@ export class AuthController {
     await this.authService.cacheUserInfo(userInfo);
     this.authService.setSession(session, refreshToken);
 
-    return {
-      message: ['Registered successfully.'],
-      userInfo,
-      accessToken,
-    };
+    return { message: ['Registered successfully.'], userInfo, accessToken };
   }
 
   @Post('/login')
@@ -50,11 +46,7 @@ export class AuthController {
     await this.authService.cacheUserInfo(userInfo);
     this.authService.setSession(session, refreshToken);
 
-    return {
-      message: ['Logged in successfully.'],
-      userInfo,
-      accessToken,
-    };
+    return { message: ['Logged in successfully.'], userInfo, accessToken };
   }
 
   @Get('/refreshAccessToken')

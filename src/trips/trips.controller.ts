@@ -38,10 +38,7 @@ export class TripsController {
     );
 
     const trip = await this.tripsService.createTrip(createTripDto, userInfo.id, distance.value);
-    return {
-      message: ['Trip added successfully.'],
-      trip,
-    };
+    return { message: ['Trip added successfully.'], trip };
   }
 
   @Put('/:id')
@@ -54,10 +51,7 @@ export class TripsController {
     );
 
     const trip = await this.tripsService.updateTrip(+id, updateTripDto, userInfo.id, distance.value);
-    return {
-      message: ['Trip updated successfully.'],
-      trip,
-    };
+    return { message: ['Trip updated successfully.'], trip };
   }
 
   @Delete('/:id')

@@ -21,15 +21,9 @@ import cookieSession from 'cookie-session';
   imports: [
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        throttlers: configService.get('throttlers'),
-      }),
+      useFactory: async (configService: ConfigService) => ({ throttlers: configService.get('throttlers') }),
     }),
-    ConfigModule.forRoot({
-      cache: true,
-      isGlobal: true,
-      load: [appConfig, cacheConfig],
-    }),
+    ConfigModule.forRoot({ cache: true, isGlobal: true, load: [appConfig, cacheConfig] }),
     TypeOrmModule.forRoot(dataSourceOptions),
     RedisModule.forRootAsync(
       {
@@ -65,14 +59,8 @@ import cookieSession from 'cookie-session';
   ],
   controllers: [],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-    {
-      provide: APP_PIPE,
-      useValue: new ValidationPipe({ whitelist: true }),
-    },
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_PIPE, useValue: new ValidationPipe({ whitelist: true }) },
   ],
 })
 export class AppModule {

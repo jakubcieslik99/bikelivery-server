@@ -47,8 +47,8 @@ export class StatsService {
 
     const weeklyStats = await this.tripsRepository
       .createQueryBuilder('trip')
-      .select(`ROUND(SUM(trip.distance::numeric)/1000, 2) || 'km'`, 'totalDistance')
-      .addSelect(`ROUND(SUM(trip.price::numeric), 2) || ' PLN'`, 'totalPrice')
+      .select("ROUND(SUM(trip.distance::numeric)/1000, 2) || 'km'", 'totalDistance')
+      .addSelect("ROUND(SUM(trip.price::numeric), 2) || ' PLN'", 'totalPrice')
       .where('trip.userId = :userId', { userId })
       .andWhere('trip.date >= :startOfWeek AND trip.date <= :endOfWeek', { startOfWeek, endOfWeek })
       .getRawOne();
@@ -66,10 +66,10 @@ export class StatsService {
 
     const monthlyStats = await this.tripsRepository
       .createQueryBuilder('trip')
-      .select(`to_char(trip.date, 'Month, DDth')`, 'day')
-      .addSelect(`ROUND(SUM(trip.distance::numeric)/1000, 2) || 'km'`, 'totalDistance')
-      .addSelect(`ROUND(AVG(trip.distance::numeric)/1000, 2) || 'km'`, 'avgRide')
-      .addSelect(`ROUND(AVG(trip.price::numeric), 2) || ' PLN'`, 'avgPrice')
+      .select("to_char(trip.date, 'Month, DDth')", 'day')
+      .addSelect("ROUND(SUM(trip.distance::numeric)/1000, 2) || 'km'", 'totalDistance')
+      .addSelect("ROUND(AVG(trip.distance::numeric)/1000, 2) || 'km'", 'avgRide')
+      .addSelect("ROUND(AVG(trip.price::numeric), 2) || ' PLN'", 'avgPrice')
       .where('trip.userId = :userId', { userId })
       .andWhere('trip.date >= :startOfMonth AND trip.date <= :endOfMonth', { startOfMonth, endOfMonth })
       .groupBy('day')

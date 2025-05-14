@@ -5,9 +5,7 @@ describe('GoogleMapsService', () => {
   let service: GoogleMapsService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [GoogleMapsService],
-    }).compile();
+    const module: TestingModule = await Test.createTestingModule({ providers: [GoogleMapsService] }).compile();
 
     service = module.get<GoogleMapsService>(GoogleMapsService);
   });
