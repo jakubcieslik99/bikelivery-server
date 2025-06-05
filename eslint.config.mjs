@@ -22,7 +22,6 @@ export default defineConfig([
     rules: {
       'no-unused-vars': 'off',
       'no-console': ['error', { allow: ['log', 'info', 'warn', 'error'] }],
-      '@stylistic/spaced-comment': ['warn', 'always'],
       '@stylistic/semi': 'error',
       '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
       '@stylistic/arrow-parens': ['error', 'as-needed'],
