@@ -3,3 +3,4 @@ onlyBuiltDependencies:
   - '@swc/core'
   - core-js
   - sqlite3
+  - unrs-resolver
