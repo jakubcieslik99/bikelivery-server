@@ -1,40 +1,36 @@
 # Node.js local development docker-compose file
 services:
-  # https://hub.docker.com/r/bitnami/postgresql
+  # https://hub.docker.com/_/postgres
   postgres:
     container_name: ${DIR}_postgres_dev
-    image: bitnami/postgresql:${POSTGRES_VER}.0
+    image: postgres:${POSTGRES_VER}
     volumes:
-      - postgres_dev_data:/bitnami/postgresql
-    tmpfs:
-      - /docker-entrypoint-initdb.d
-      - /docker-entrypoint-preinitdb.d
+      - postgres_dev_data:/var/lib/postgresql/data # /data at the end as it is an older 16.3 version
     env_file:
       - .env
     environment:
-      POSTGRESQL_DATABASE: ${POSTGRES_DB} # database
-      POSTGRESQL_USERNAME: ${POSTGRES_USER} # root
-      POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD} # Passw0rd!
-      POSTGRESQL_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Passw0rd!
+      POSTGRES_DB: ${POSTGRES_DB} # database
+      POSTGRES_USER: ${POSTGRES_USER} # root
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Passw0rd!
     ports:
       - ${POSTGRES_PORT}:5432
     expose:
       - ${POSTGRES_PORT}
-  # https://hub.docker.com/r/bitnami/redis
+  # https://hub.docker.com/_/redis
   redis:
     container_name: ${DIR}_redis_dev
-    image: bitnami/redis:${REDIS_VER}
+    image: redis:${REDIS_VER}
     volumes:
-      - redis_dev_data:/bitnami/redis/data
+      - redis_dev_data:/data
     env_file:
       - .env
     environment:
-      ALLOW_EMPTY_PASSWORD: no
-      REDIS_PASSWORD: ${REDIS_PASSWORD} # Passw0rd!
+      REDIS_PASS: ${REDIS_PASSWORD} # Passw0rd!
     ports:
       - ${REDIS_PORT}:6379
     expose:
       - ${REDIS_PORT}
+    command: sh -c 'redis-server --requirepass "$REDIS_PASSWORD"'
 volumes:
   postgres_dev_data: {}
   redis_dev_data: {}
