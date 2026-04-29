@@ -70,7 +70,7 @@ export class AuthService {
       userInfo.id.toString(),
       JSON.stringify(userInfo),
       'EX',
-      this.configService.get('jwt.refreshToken.expiresIn'),
+      Number(this.configService.get('jwt.refreshToken.expiresIn')),
     );
   }
 

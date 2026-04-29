@@ -1,12 +1,13 @@
 import { Expose } from 'class-transformer';
-import { PartialType } from '@nestjs/mapped-types';
+//import { PartialType } from '@nestjs/mapped-types';
 
 export class UserDto {
   @Expose()
-  id: number;
+  id!: number;
 
   @Expose()
-  email: string;
+  email!: string;
 }
 
-export class UserInfoDto extends PartialType(UserDto) {}
+export class UserInfoDto extends UserDto {}
+//export class UserInfoDto extends PartialType(UserDto) {}

@@ -19,6 +19,6 @@ async function bootstrap() {
   app.use(helmet());
   app.enableCors(cors(config));
 
-  await app.listen(config.get('app.port'));
+  await app.listen(config.get('app.port') ?? 3000);
 }
 bootstrap();

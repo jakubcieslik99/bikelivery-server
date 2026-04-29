@@ -47,7 +47,7 @@ export class RefreshAccessTokenGuard implements CanActivate {
       if (error instanceof TokenExpiredError) {
         throw new ForbiddenException('Session expired. Please log in again.');
       }
-      throw new Error(error.message || 'Unknown error occurred.');
+      throw new Error(error instanceof Error ? error.message : 'Unknown error occurred.', { cause: error });
     }
   }
 }

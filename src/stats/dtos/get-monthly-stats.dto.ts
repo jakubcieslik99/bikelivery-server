@@ -8,5 +8,5 @@ export enum GetMonthlyStatsSortEnum {
 export class GetMonthlyStatsDto {
   @IsNotEmpty({ message: 'Sort is required.' })
   @IsEnum(GetMonthlyStatsSortEnum, { message: 'Invalid sort value.' })
-  sort: GetMonthlyStatsSortEnum;
+  sort!: GetMonthlyStatsSortEnum;
 }

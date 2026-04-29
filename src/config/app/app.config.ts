@@ -2,7 +2,7 @@ export default () => ({
   app: {
     env: process.env.ENV || 'development',
     host: process.env.HOST || 'localhost',
-    port: parseInt(process.env.PORT, 10) || 3000,
+    port: parseInt(process.env.PORT || '3000', 10),
   },
 
   cors: { apiUrl: process.env.API_URL || '', appUrl: process.env.APP_URL || '' },

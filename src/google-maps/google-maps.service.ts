@@ -15,7 +15,7 @@ export class GoogleMapsService extends Client {
         destination: destinationAddress,
         mode: TravelMode.bicycling,
         units: UnitSystem.metric,
-        key: this.configService.get('googleDirections.apiKey'),
+        key: this.configService.getOrThrow<string>('googleDirections.apiKey'),
       },
     });
 

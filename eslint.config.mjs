@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url';
-import { defineConfig, globalIgnores } from 'eslint/config';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
@@ -10,12 +10,10 @@ import stylistic from '@stylistic/eslint-plugin';
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
 
 export default defineConfig([
-  { files: ['**/*.{js,mjs,cjs,ts}'] },
   { files: ['**/*.{js,mjs,cjs,ts}'], languageOptions: { globals: { ...globals.node, ...globals.jest } } },
   js.configs.recommended,
   tseslint.configs.recommended,
   eslintPluginPrettier,
-  globalIgnores(['**/dist/', '**/migrations/']),
   includeIgnoreFile(gitignorePath),
   {
     plugins: { '@stylistic': stylistic },
@@ -35,4 +33,5 @@ export default defineConfig([
       '@typescript-eslint/no-explicit-any': 'off',
     },
   },
+  { ignores: ['dist/', '**/migrations/'] },
 ]);

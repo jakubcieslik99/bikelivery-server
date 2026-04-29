@@ -15,9 +15,11 @@ export class LoginConflictMiddleware implements NestMiddleware {
 
   async use(req: Request, _res: Response, next: NextFunction) {
     if (req.session?.refreshToken || req.userInfo) {
-      req.session.refreshToken = undefined;
+      if (req.session) {
+        req.session.refreshToken = undefined;
+      }
 
-      if (req.userInfo) {
+      if (req.userInfo?.id) {
         const userId = req.userInfo.id.toString();
         await Promise.all([this.redis.del(userId), (req.userInfo = undefined)]);
       }

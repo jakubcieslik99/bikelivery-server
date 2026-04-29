@@ -21,7 +21,7 @@ import cookieSession from 'cookie-session';
   imports: [
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({ throttlers: configService.get('throttlers') }),
+      useFactory: async (configService: ConfigService) => ({ throttlers: configService.get('throttlers') ?? [] }),
     }),
     ConfigModule.forRoot({ cache: true, isGlobal: true, load: [appConfig, cacheConfig] }),
     TypeOrmModule.forRoot(dataSourceOptions),

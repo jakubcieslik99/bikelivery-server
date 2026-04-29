@@ -4,16 +4,16 @@ import { Trip } from '../../trips/entities/trip.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column()
-  password: string;
+  password!: string;
 
   @OneToMany(() => Trip, trip => trip.user)
-  trips: Trip[];
+  trips!: Trip[];
 
   @AfterInsert()
   logInsert() {

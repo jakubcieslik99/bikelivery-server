@@ -13,28 +13,28 @@ import { User } from '../../users/entities/user.entity';
 @Entity()
 export class Trip {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  start_address: string;
+  start_address!: string;
 
   @Column()
-  destination_address: string;
+  destination_address!: string;
 
   @Column()
-  date: Date;
+  date!: Date;
 
   @Column()
-  distance: number;
+  distance!: number;
 
   @Column({ type: 'float' })
-  price: number;
+  price!: number;
 
   @ManyToOne(() => User, user => user.trips)
-  user: User;
+  user!: User;
 
   @RelationId((trip: Trip) => trip.user)
-  userId: number;
+  userId!: number;
 
   @AfterInsert()
   logInsert() {

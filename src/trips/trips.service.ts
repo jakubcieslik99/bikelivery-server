@@ -45,7 +45,7 @@ export class TripsService {
       ...trip,
       distance,
       price: trip.price,
-      date: new Date(trip.date),
+      date: trip.date ? new Date(trip.date) : existingTrip.date,
     });
 
     return updatedTrip;

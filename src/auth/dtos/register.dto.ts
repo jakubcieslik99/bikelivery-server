@@ -7,23 +7,23 @@ export class RegisterDto {
   @IsString({ message: 'Email is not a string.' })
   @MaxLength(60, { message: 'Email cannot be longer than 60 characters.' })
   @IsEmail({}, { message: 'Email is not valid.' })
-  email: string;
+  email!: string;
 
   @IsNotEmpty({ message: 'Password cannot be empty.' })
   @IsString({ message: 'Password is not a string.' })
   @MinLength(3, { message: 'Password must be between 8 and 60 characters long.' })
   @MaxLength(60, { message: 'Password must be between 8 and 60 characters long.' })
-  password: string;
+  password!: string;
 }
 
 export class RegisterResDto {
   @Expose()
-  message: string[];
+  message!: string[];
 
   @Expose()
   @Type(() => UserInfoDto)
-  userInfo: UserInfoDto;
+  userInfo!: UserInfoDto;
 
   @Expose()
-  accessToken: string;
+  accessToken!: string;
 }
