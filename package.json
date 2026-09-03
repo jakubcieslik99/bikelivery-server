@@ -1,6 +1,6 @@
 {
   "name": "bikelivery-server",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "Bikelivery",
   "main": "main.ts",
   "scripts": {
